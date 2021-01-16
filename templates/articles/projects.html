@@ -1,0 +1,31 @@
+{% extends "articles/base.html" %}
+{% block content %}
+<div class="row">
+    <div class="py-3">
+        <h1>Projects</h1>
+        <small class="text=muted">Explore some of my projects</small>
+    </div>
+    <hr>
+    {% for project in projects %}
+        <div class="card text-center project-card">
+            <div class="card-body">
+                <h5 class="card-title">{{ project.name }}</h5>
+
+                <p class="card-text">{{ project.description }}</p>
+
+                <h6 class="card-text">Articles</h6>
+                <ul class="list-group">
+                    {% for article in project.articles.all %}
+                        <a href="{% url 'article' article.id %}" class="list-item"> {{ article }} </a>
+                    {% empty %}
+                        <strong>Nothing to see here</strong>
+                    {% endfor %}
+                    
+                </ul>
+            </div>
+            <div class="card-footer text-muted">
+                Created: {{ project.created_date }}
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
