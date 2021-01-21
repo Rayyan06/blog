@@ -102,12 +102,14 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+LOGIN_URL = '/login'
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'EST'
 
 USE_I18N = True
 
@@ -130,7 +132,7 @@ MEDIA_ROOT = BASE_DIR / "cdn_test" / "media"
 
 PROTECTED_MEDIA = BASE_DIR / "cdn_test" / "protected"
 
-if DEBUG: 
+if DEBUG:
     STATIC_ROOT.mkdir(parents=True, exist_ok=True)
     MEDIA_ROOT.mkdir(parents=True, exist_ok=True)
     PROTECTED_MEDIA.mkdir(parents=True, exist_ok=True)

@@ -9,12 +9,14 @@ body {
 
 
 .navbar {
-    background-color: rgb(188, 202, 209);
-    box-shadow: 0px 3px 14px 2px rgb(0, 0, 0, 0.4);
+    background-color: #27d998;
+    box-shadow: 0px 2px 7px 1px rgba(0,0,0,0.47);
+    -webkit-box-shadow: 0px 2px 7px 1px rgba(0,0,0,0.47);
+    -moz-box-shadow: 0px 2px 7px 1px rgba(0,0,0,0.47);
     flex: 0 1 auto;
 }
 .main {
-    background-color: rgb(235, 235, 235);
+    background-color: rgb(245, 245, 245);
     flex: 1;
 }
 .box {
@@ -26,3 +28,4 @@ body {
 .project-card {
     width: 50%
 }
+

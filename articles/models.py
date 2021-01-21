@@ -12,8 +12,8 @@ class User(AbstractUser):
 
 
 class Project(models.Model):
-    name = models.CharField(max_length=20)
-    description = models.CharField(max_length=200)
+    name = models.CharField(max_length=40)
+    description = models.TextField()
 
     created_date = models.DateField(auto_now=True)
 
@@ -22,18 +22,19 @@ class Project(models.Model):
 
 # Create your models here.
 class Article(models.Model):
-    title = models.CharField(max_length=20)
+    title = models.CharField(max_length=40)
     project = models.ForeignKey(Project, blank=True, null=True, related_name="articles", on_delete=models.CASCADE)
     content = models.TextField()
     published_date = models.DateField(auto_now=True)
-    likes = models.IntegerField(default=0)
+    likes = models.ManyToManyField(User, related_name="likes", blank=True)
+
 
     def __str__(self):
         return self.title
-    
+
     # Returns age of article in minutes
     def get_age(self):
-       
+
         difference = date.today()-self.published_date
 
         if difference.days == 0:
@@ -42,8 +43,8 @@ class Article(models.Model):
             return 'yesterday'
         else:
             return f'{difference.days} days ago'
-        
-    
+
+
 
     def display_content(self):
         """
@@ -51,18 +52,35 @@ class Article(models.Model):
         """
         markdowner = Markdown()
         return markdowner.convert(self.content)
-    
+
+    @property
+    def get_likes(self):
+        return self.likes.count()
 
 
+
+# User-interaction related models.
 
 class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name="comments")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
     text = models.CharField(max_length=20)
-    
+
     def __str__(self):
         return self.text
 
     def get_absolute_url(self):
         return reverse('article', kwargs={'pk': self.article.pk})
-    
+
+
+
+
+
+
+
+
+
+
+
+
+

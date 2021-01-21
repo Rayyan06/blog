@@ -1,27 +1,56 @@
 {% extends "articles/base.html" %}
+{% load static %}
 {% block content %}
 <div class="content box container p-3 m-3">
     <div class="row">
-        <h1>{{ article.title }}</h1> 
-        <i class="far fa-thumbs-up" id="like-button" data-article="{{ article.id }}"></i>
+        <div class="col-md-9">
+            <h1>{{ article.title }}</h1>
+        </div>
+        <div class="col">
+            {% if request.user.is_authenticated %}
+
+                <button class="btn btn-outline-light border" id="like-button">
+                    <span id="like-text">Like&nbsp&nbsp&nbsp&nbsp</span>
+                    <i class="far fa-heart pull-right" id="like-icon"></i>
+                </button>
+            {% else %}
+                <button class="btn btn-outline-light border" id="like-button" disabled>
+                    <span id="like-text">Like</span>
+                    <i class="far fa-heart pull-right" id="like-icon"></i>
+                </button>
+            {% endif %}
+
+
+        </div>
+        <div class="col">
+            <h4><span class="badge bg-danger" id="likes">{{ article.get_likes }} Likes</span></h4>
+        </div>
+        {{ is_liked|json_script:"is_liked" }}
+        {{ article.get_likes|json_script:"likes_amount" }}
+        {{ article.id|json_script:"article_id" }}
+
     </div>
-    
+
     <hr>
     {{ article.display_content|safe }}
 </div>
 <div class="comments box container p-3 m-3">
     <h2> Comments </h2>
     <div class="container py-3">
-        <form action="{% url 'comment' article.id %}" method="POST">
-            {% csrf_token %}
-            
-            <div class="form-group mb-3">
-                {{ form.text }}
-            </div>
-            <div class="mb-3">
-                <input class="btn btn-outline-primary" type="submit" value="Comment">
-            </div>
-        </form>
+        {% if request.user.is_authenticated %}
+            <form method="POST" id="comment-form" action="{% url 'comment' article.id %}">
+                {% csrf_token %}
+
+                <div class="form-group mb-3">
+                    {{ form.text }}
+                </div>
+                <div class="mb-3">
+                    <input class="btn btn-outline-primary" type="submit" value="Comment">
+                </div>
+            </form>
+        {% else %}
+            <p>You must be logged in to comment.</p>
+        {% endif %}
     </div>
      <div class='list-group'>
         {% for comment in article.comments.all %}
@@ -29,7 +58,7 @@
                 <div class="d-flex w-100 justify-content-between">
                     <small class='text-muted'>{{ comment.date }}</small>
                 </div>
-        
+
 
             <p class="mb-1">{{ comment.text }}</p>
             <small class='text-muted'>
@@ -44,6 +73,9 @@
 {% endblock %}
 
 
+{% block css %}
+<link href="{% static 'css/article.css' %}" rel="stylesheet">
+{% endblock %}
 {% block js %}
 <script src="{% static 'js/article.js' %}"></script>
 {% endblock %}
