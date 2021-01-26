@@ -1,5 +1,7 @@
 {% extends "articles/base.html" %}
 {% load static %}
+{% load embed_video_tags %}
+
 {% block content %}
 <div class="content box container p-3 m-3">
     <div class="row">
@@ -7,18 +9,11 @@
             <h1>{{ article.title }}</h1>
         </div>
         <div class="col">
-            {% if request.user.is_authenticated %}
 
-                <button class="btn btn-outline-light border" id="like-button">
-                    <span id="like-text">Like&nbsp&nbsp&nbsp&nbsp</span>
-                    <i class="far fa-heart pull-right" id="like-icon"></i>
-                </button>
-            {% else %}
-                <button class="btn btn-outline-light border" id="like-button" disabled>
-                    <span id="like-text">Like</span>
-                    <i class="far fa-heart pull-right" id="like-icon"></i>
-                </button>
-            {% endif %}
+            <button class="btn btn-outline-light border" id="like-button" {% if request.user.is_authenticated is not True %} disabled {% endif %}>
+                <span id="like-text">Like&nbsp&nbsp&nbsp&nbsp</span>
+                <i class="far fa-heart pull-right" id="like-icon"></i>
+            </button>
 
 
         </div>
@@ -33,6 +28,9 @@
 
     <hr>
     {{ article.display_content|safe }}
+    <hr>
+    {% video article.video '620x360' %}
+
 </div>
 <div class="comments box container p-3 m-3">
     <h2> Comments </h2>
@@ -52,6 +50,9 @@
             <p>You must be logged in to comment.</p>
         {% endif %}
     </div>
+
+    <div id="comments" class='list-group'></div>
+    <!--
      <div class='list-group'>
         {% for comment in article.comments.all %}
             <div class='list-group-item'>
@@ -69,6 +70,7 @@
             <p>No one has commented on this article yet. Be the first to comment!</p>
         {% endfor %}
     </div>
+    -->
 </div>
 {% endblock %}
 

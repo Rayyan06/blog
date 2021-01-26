@@ -3,12 +3,13 @@ from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
 
 from markdown2 import Markdown
+from embed_video.fields import EmbedVideoField
 from datetime import datetime as dt
 from datetime import date
 
 
 class User(AbstractUser):
-    pass
+    profile_pic = models.ImageField(upload_to="users/profile_pics", blank=True, null=True)
 
 
 class Project(models.Model):
@@ -27,6 +28,7 @@ class Article(models.Model):
     content = models.TextField()
     published_date = models.DateField(auto_now=True)
     likes = models.ManyToManyField(User, related_name="likes", blank=True)
+    video = EmbedVideoField(blank=True)
 
 
     def __str__(self):
@@ -65,6 +67,7 @@ class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name="comments")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
     text = models.CharField(max_length=20)
+    date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.text

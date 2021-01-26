@@ -1,9 +1,13 @@
 {% extends "articles/base.html" %}
+{% load static %}
+{% block css %}
+    <link href="{% static 'css/projects.css' %}" rel="stylesheet" />
+{% endblock %}
 {% block content %}
 <div class="row">
-    <div class="py-3">
+    <div class="py-3" id="projects-text">
         <h1>Projects</h1>
-        <small class="text=muted">Explore some of my projects</small>
+        <small class="text-muted">Explore some of my projects</small>
     </div>
     <hr>
     {% for project in projects %}

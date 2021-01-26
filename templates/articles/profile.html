@@ -1,0 +1,14 @@
+{% extends "articles/base.html" %}
+{% block content %}
+
+<div class="row">
+    <div class="col-6">
+        <img src="{{ request.user.profile_pic.url }}" class="img-fluid border" alt="Profile Pic">
+    </div>
+    <div class="col-6 box p-4">
+
+        <h1>{{ request.user.username }}</h1>
+        <h2>{{ request.user.email }}</h2>
+    </div>
+</div>
+{% endblock %}

@@ -9,6 +9,14 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 
+from rest_framework import status
+from rest_framework import generics
+
+from rest_framework import permissions
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import CommentSerializer
 
 from .models import Article, User, Project, Comment
 from .forms import CommentForm
@@ -54,21 +62,28 @@ class JsonableResponseMixin:
             return JsonResponse(data)
 
 
-class CommentCreate(CreateView):
-    model = Comment
-    fields = ['text']
+
+class CommentList(generics.ListCreateAPIView):
+    """
+    List all comments for a specified article, or create
+    a new comment
+    """
+
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
-    def form_valid(self, form):
+    def get_queryset(self):
+        """
+        We only want the comments for the specified article, so we have to
+        override this lol
+        """
+        article_id = self.kwargs['article_id']
+        article = Article.objects.get(id=article_id)
+        return Comment.objects.filter(article=article)
 
-        form.instance.user = self.request.user
-        article = Article.objects.get(pk=self.kwargs['pk'])
-        form.instance.article = article
-
-
-        return super().form_valid(form)
-
-
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 
@@ -105,6 +120,10 @@ class ProjectsListView(ListView):
     template_name = "articles/projects.html"
     context_object_name = "projects"
 
+
+@login_required
+def profile_view(request):
+    return render(request, "articles/profile.html")
 
 def login_view(request):
     if request.method == "POST":

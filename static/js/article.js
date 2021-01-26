@@ -84,6 +84,34 @@ function like() {
 
 
 
+const comments_box = document.querySelector('#comments');
+function loadCommentList() {
+
+    function loadComment(obj) {
+        const item = document.createElement('div');
+        item.classList.add('list-group-item');
+        const dateDiv = document.createElement('div');
+        dateDiv.className =
+    }
+
+    async function getCommentList() {
+        const response = await fetch(`/api/comments/${articleID}`);
+        jsonResponse = await response.json();
+        return jsonResponse;
+    }
+
+    getCommentList()
+    .then(data=>{
+
+    })
+
+
+
+
+
+}
+
+
 
 like_button.onclick = like;
 
