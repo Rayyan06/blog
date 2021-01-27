@@ -1,8 +1,10 @@
 import React from 'react';
+import Cookies from 'js-cookie';
 import { useEffect, useState } from "react";
 
 
 const articleID = JSON.parse(document.querySelector("#article_id").textContent);
+const csrftoken = Cookies.get('csrftoken')
 
 function Comments() {
     // Save a variable where we will store all the comments
@@ -10,6 +12,9 @@ function Comments() {
     const [isLoading, setIsLoading] = useState(true);
 
 
+    const commentSaved=()=> {
+        loadCommentList();
+    }
 
     const loadCommentList = () => {
         fetch(`/api/comments/${articleID}?format=json`)
@@ -59,7 +64,7 @@ function Comments() {
 }
 
 
-const addComment = (props) => {
+const AddCommentWidget = (props) => {
     const [text, setText] = useState("");
 
     const saveComment = function() {
@@ -68,7 +73,34 @@ const addComment = (props) => {
             article: articleID
         }
 
+        fetch(`/api/comments/${articleID}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', 
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify(comment)
+        
+
+        })
+        .then(res=>res.json())
+        .then(data=>console.log('Success' + data))
+        .catch(error=>console.log('Error' + error))
+
     }
+
+    return (
+        <div className="container py-3">
+            <div className="mb-3">
+                <label for="comment-text" className="form-label">Text</label>
+                <input id="comment-text" type="text" placeholder="Comment Text" className="form-control" value={text} onChange={(event)=>event.target.value}/>
+            </div>
+            <div className="mb-3">
+                <button className="btn btn-outline-primary" type="button" onClick={() => saveComment()}>Comment</button>
+            </div>
+        </div>
+        
+    );
 }
 const Comment = (props) => {
     return (
