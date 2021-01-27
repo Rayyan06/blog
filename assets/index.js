@@ -1,7 +1,8 @@
-function component() {
-    const element = document.createElement('div');
-    element.innerHTML = 'Hello webpack';
-    return element
-}
+import React from 'react';
+import ReactDOM from "react-dom";
+import Comments from "/components/comments.js";
 
-document.body.appendChild(component());
+ReactDOM.render(
+  <Comments />,
+  document.getElementById('comments')
+);

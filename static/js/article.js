@@ -84,7 +84,7 @@ function like() {
 
 
 
-const comments_box = document.querySelector('#comments');
+/* const comments_box = document.querySelector('#comments');
 function loadCommentList() {
 
     function loadComment(obj) {
@@ -110,7 +110,7 @@ function loadCommentList() {
 
 
 }
-
+ */
 
 
 like_button.onclick = like;
