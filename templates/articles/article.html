@@ -34,6 +34,7 @@
     {% endif %}
 
 </div>
+
 <div class="comments box container p-3 m-3">
     <h2> Comments </h2>
     <div class="container py-3">
@@ -56,24 +57,11 @@
     </div>
 
 
-    <div id="comments" class='list-group'></div>
+    <div id="comments" class='list-group'>
+    </div>
     <!--
      <div class='list-group'>
-        {% for comment in article.comments.all %}
-            <div class='list-group-item'>
-                <div class="d-flex w-100 justify-content-between">
-                    <small class='text-muted'>{{ comment.date }}</small>
-                </div>
 
-
-            <p class="mb-1">{{ comment.text }}</p>
-            <small class='text-muted'>
-                by <strong>{{ comment.user }}</strong>
-            </small>
-        </div>
-        {% empty %}
-            <p>No one has commented on this article yet. Be the first to comment!</p>
-        {% endfor %}
     </div>
     -->
 </div>
