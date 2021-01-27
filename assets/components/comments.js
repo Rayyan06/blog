@@ -51,6 +51,7 @@ function Comments() {
     }  else {
         return (
             <>
+            <AddCommentWidget commentSaved={commentSaved}/>
             {comments.map((comment)=>
             <Comment key={comment.id} comment={comment}/>
 
@@ -84,7 +85,11 @@ const AddCommentWidget = (props) => {
 
         })
         .then(res=>res.json())
-        .then(data=>console.log('Success' + data))
+        .then(data=>{
+            console.log('Success' + data)
+            props.commentSaved();
+        }
+        )
         .catch(error=>console.log('Error' + error))
 
     }
@@ -92,8 +97,8 @@ const AddCommentWidget = (props) => {
     return (
         <div className="container py-3">
             <div className="mb-3">
-                <label for="comment-text" className="form-label">Text</label>
-                <input id="comment-text" type="text" placeholder="Comment Text" className="form-control" value={text} onChange={(event)=>event.target.value}/>
+                <label htmlFor="comment-text" className="form-label">Text</label>
+                <input id="comment-text" type="text" placeholder="Comment Text" className="form-control" value={text} onChange={(event)=>setText(event.target.value)}/>
             </div>
             <div className="mb-3">
                 <button className="btn btn-outline-primary" type="button" onClick={() => saveComment()}>Comment</button>
