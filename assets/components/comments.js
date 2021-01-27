@@ -3,8 +3,10 @@ import Cookies from 'js-cookie';
 import { useEffect, useState } from "react";
 
 
+
+
 const articleID = JSON.parse(document.querySelector("#article_id").textContent);
-const csrftoken = Cookies.get('csrftoken')
+const csrftoken = Cookies.get('csrftoken');
 
 function Comments() {
     // Save a variable where we will store all the comments
@@ -46,17 +48,14 @@ function Comments() {
         return <h5>Loading...</h5>
     }
 
-    if (comments.length===0) {
-        return <h5>No one has commented on this article yet! Be the first to comment</h5>
-    }  else {
+    else {
         return (
             <>
             <AddCommentWidget commentSaved={commentSaved}/>
-            {comments.map((comment)=>
-            <Comment key={comment.id} comment={comment}/>
+            <CommentList comments={comments}/>
 
-            )
-            }
+            
+            
             </>
         );
     }
@@ -107,21 +106,29 @@ const AddCommentWidget = (props) => {
         
     );
 }
-const Comment = (props) => {
-    return (
-        <div className='list-group-item'>
-            <div className="d-flex w-100 justify-content-between">
-                <small className="text-muted">
-                    { props.comment.date }
-                </small>
-            </div>
-            <p className="mb-1">{ props.comment.text }</p>
-            <small className='text-muted'>
-                by <strong>{ props.comment.user }</strong>
-            </small>
-        </div>
+const CommentList = (props) => {
+    if (comments.length===0) {
+        return <h5>No one has commented on this article yet! Be the first to comment</h5>
+    }  else {
+        return (
+            <>
+            {props.comments.map((comment)=>
+                <div className='list-group-item'>
+                    <div className="d-flex w-100 justify-content-between">
+                        <small className="text-muted">
+                            { comment.date }
+                        </small>
+                    </div>
+                    <p className="mb-1">{ comment.text }</p>
+                    <small className='text-muted'>
+                        by <strong>{ comment.user }</strong>
+                    </small>
+                </div>
+            )}
+            </>
 
-    )
+        )
+    }
 }
 
 
