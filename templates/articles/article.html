@@ -8,6 +8,8 @@
         <div class="col-md-9">
             <h1>{{ article.title }}</h1>
         </div>
+        <div id="likeshare"></div>
+        <!--
         <div class="col">
 
             <button class="btn btn-outline-light border" id="like-button" {% if request.user.is_authenticated is not True %} disabled {% endif %}>
@@ -20,9 +22,10 @@
         <div class="col">
             <h4><span class="badge bg-danger" id="likes">{{ article.get_likes }} Likes</span></h4>
         </div>
-        {{ is_liked|json_script:"is_liked" }}
-        {{ article.get_likes|json_script:"likes_amount" }}
+        -->
+
         {{ article.id|json_script:"article_id" }}
+        {{ request.user.is_authenticated|json_script:"user_is_authenticated" }}
 
     </div>
 
@@ -72,7 +75,6 @@
 <link href="{% static 'css/article.css' %}" rel="stylesheet">
 {% endblock %}
 {% block js %}
-<script src="{% static 'js/article.js' %}"></script>
 <script src="{% static 'index-bundle.js' %}"></script>
 
 {% endblock %}

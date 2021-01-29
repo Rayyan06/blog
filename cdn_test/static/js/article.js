@@ -1,3 +1,4 @@
+/*
 let liked = JSON.parse(document.querySelector("#is_liked").textContent);
 const articleID = JSON.parse(document.querySelector("#article_id").textContent);
 
@@ -84,7 +85,7 @@ function like() {
 
 
 
-/* const comments_box = document.querySelector('#comments');
+ const comments_box = document.querySelector('#comments');
 function loadCommentList() {
 
     function loadComment(obj) {
@@ -110,11 +111,12 @@ function loadCommentList() {
 
 
 }
- */
+
 
 
 like_button.onclick = like;
 
+/*
 
 
 

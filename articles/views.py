@@ -15,8 +15,9 @@ from rest_framework import generics
 from rest_framework import permissions
 
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import CommentSerializer
+from .serializers import CommentSerializer, ArticleSerializer, LikeSerializer
 
 from .models import Article, User, Project, Comment
 from .forms import CommentForm
@@ -32,34 +33,6 @@ class ArticlesListView(ListView):
     context_object_name = "articles_list"
 
 
-class JsonableResponseMixin:
-    """
-    Mixin to add JSON support to a form.
-    Must be used with an object-based FormView (e.g. CreateView)
-    """
-    def form_invalid(self, form):
-        response = super().form_invalid(form)
-        if self.request.accepts('text/html'):
-            return response
-        else:
-            return JsonResponse(form.errors, status=400)
-
-    def form_valid(self, form):
-        # We make sure to call the parent's form_valid() method because
-        # it might do some processing (in the case of CreateView, it will
-        # call form.save() for example).
-        form.instance.user = self.request.user
-        article = Article.objects.get(pk=self.object.pk)
-        form.instance.article = article
-        response = super().form_valid(form)
-
-        if self.request.accepts('text/html'):
-            return response
-        else:
-            data = {
-                'pk': self.object.pk,
-            }
-            return JsonResponse(data)
 
 
 
@@ -98,7 +71,6 @@ class ArticleDetail(DetailView):
         context = super().get_context_data(**kwargs)
 
         context['form'] = CommentForm()
-        context['is_liked'] = self.object.likes.filter(id=self.request.user.id).exists()
         return context
 
     @method_decorator(ensure_csrf_cookie)
@@ -176,18 +148,41 @@ def register(request):
     else:
         return render(request, "articles/register.html")
 
+@api_view(['GET'])
+def get_article_likes(request, pk):
+    try:
+        article = Article.objects.get(pk=pk)
+    except article.DoesNotExist:
+        return Response({'Error': 'Article not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    return Response({'likes': article.get_likes}, status=status.HTTP_200_OK)
+
+
 
 @login_required
+@api_view(['GET', 'PUT'])
 def like_article(request, pk):
-    article = Article.objects.get(pk=pk)
-    print(article.get_likes)
-    if article.likes.filter(id=request.user.id).exists():
-        article.likes.remove(request.user)
-    else:
-        article.likes.add(request.user)
+    """Like an article"""
+    try:
+        article = Article.objects.get(pk=pk)
+    except article.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
-    print(article.get_likes)
+    if request.method=='GET':
+        """ Returns whether an article is liked by the user """
 
-    return JsonResponse({'likes': article.get_likes})
+        return Response({'liked': article.likes.filter(id=request.user.id.exists())}, status=status.HTTP_200_OK)
+
+    elif request.method=='PUT':
+        try:
+            liked = article.likes.filter(id=request.user.id).exists()
+            if liked:
+                article.likes.remove(request.user)
+            else:
+                article.likes.add(request.user)
+            return Response({'liked': liked}, status=status.HTTP_200_OK)
+        except:
+
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
