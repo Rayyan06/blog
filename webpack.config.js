@@ -1,4 +1,6 @@
 const path = require('path');
+const webpack = require("webpack");
+
 
 module.exports = {
   entry: './assets/index.js',  // path to our input file
@@ -11,9 +13,21 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        loader: "babel-loader",
-        options: { presets: ["@babel/preset-env", "@babel/preset-react"] }
+        use: {
+          loader: "babel-loader",
+        },
       },
     ]
-  }
+  },
+  optimization: {
+    minimize: true,
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      "process.env": {
+        // This has effect on the react lib size
+        NODE_ENV: JSON.stringify("production"),
+      },
+    }),
+  ],
 };

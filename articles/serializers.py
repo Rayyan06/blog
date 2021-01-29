@@ -11,7 +11,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class ArticleSerializer(serializers.ModelSerializer):
-    likes = serializers.PrimaryKeyRelatedField(many=True)
+    likes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     class Meta:
         model = Article
         fields = ['id', 'likes']

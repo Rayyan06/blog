@@ -116,7 +116,7 @@ function loadCommentList() {
 
 like_button.onclick = like;
 
-/*
+*/
 
 
 
