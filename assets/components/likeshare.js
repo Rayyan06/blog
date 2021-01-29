@@ -5,6 +5,9 @@ import {useState, useEffect} from "react";
 
 
 const articleID = JSON.parse(document.querySelector("#article_id").textContent);
+const articleTitle = JSON.parse(document.querySelector("#article_title").textContent);
+const user_is_authenticated = JSON.parse(document.querySelector("#user_is_authenticated").textContent);
+
 
 const csrftoken = Cookies.get('csrftoken');
 
@@ -35,10 +38,13 @@ export default function LikesElement() {
 
     return (
         <>
-        <LikeButton likeCallback={()=>getLikesAmount()}/>
-        <div className="col">
-            <h4><span className="badge bg-danger">{likes} Likes</span></h4>
-        </div>
+            <div className="col-md-9">
+                <h1>{articleTitle}</h1>
+            </div>
+            <LikeButton likeCallback={()=>getLikesAmount()}/>
+            <div className="col">
+                <h4><span id="likes" className="badge bg-danger">{likes} Likes</span></h4>
+            </div>
         </>
     )
 
@@ -48,9 +54,9 @@ export default function LikesElement() {
 }
 
 
-function LikeButton() {
+function LikeButton(props) {
     const [liked, setLiked] = useState(false);
-
+    const [loading, setLoading] = useState(false);
 
 
     const getLiked = () => {
@@ -63,6 +69,7 @@ function LikeButton() {
     }
 
     const like = async() => {
+        setLoading(true);
         const response = await fetch(`/article/${articleID}/like`, {
             method: 'PUT',
             body: {
@@ -85,7 +92,9 @@ function LikeButton() {
         .then(data=>{
             console.log(data);
             setLiked(data.liked);
+            setLoading(false);
             props.likeCallback();
+
 
 
         })
@@ -101,12 +110,13 @@ function LikeButton() {
     })
 
 
+    const IconClass = liked ? 'far' : 'fas';
 
     return (
         <div className="col">
-            <button className="btn btn-outline-light border" onClick={()=>handleButtonClick()}disabled={!user_is_authenticated}>
-                <span>{liked ? "Dislike" : "Like"}</span>
-                <i className={liked ? 'fas' : 'far' + 'fa-heart pull-right'}></i>
+            <button className="btn btn-outline-light border" id="like-button" onClick={()=>handleButtonClick()} disabled={(!user_is_authenticated)|loading}>
+                <span id="like-text">{liked ? "Like   " : "Dislike "}</span>
+                <i id="like-icon" className={IconClass + ' fa-heart pull-right'}></i>
             </button>
         </div>
     )

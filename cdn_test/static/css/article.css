@@ -8,3 +8,7 @@
 #like-text {
     white-space: pre;
 }
+
+#save-comment {
+    pointer-events: none;
+}

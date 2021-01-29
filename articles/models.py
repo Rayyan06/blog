@@ -66,7 +66,7 @@ class Article(models.Model):
 class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name="comments")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
-    text = models.CharField(max_length=20)
+    text = models.CharField(max_length=200)
     date = models.DateTimeField(auto_now=True)
 
     def __str__(self):

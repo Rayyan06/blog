@@ -51,9 +51,15 @@ class CommentList(generics.ListCreateAPIView):
         We only want the comments for the specified article, so we have to
         override this lol
         """
+
         article_id = self.kwargs['article_id']
         article = Article.objects.get(id=article_id)
-        return Comment.objects.filter(article=article)
+        if self.request.user.is_authenticated:
+            user_comments = Comment.objects.filter(article=article).filter(user=self.request.user).order_by('-date')
+            rest_of_comments = Comment.objects.filter(article=article).exclude(user=self.request.user).order_by('-date')
+            return user_comments | rest_of_comments
+        else:
+            return Comment.objects.filter(article=article).order_by('-date')
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

@@ -4,30 +4,11 @@
 
 {% block content %}
 <div class="content box container p-3 m-3">
-    <div class="row">
-        <div class="col-md-9">
-            <h1>{{ article.title }}</h1>
-        </div>
-        <div id="likeshare"></div>
-        <!--
-        <div class="col">
 
-            <button class="btn btn-outline-light border" id="like-button" {% if request.user.is_authenticated is not True %} disabled {% endif %}>
-                <span id="like-text">Like&nbsp&nbsp&nbsp&nbsp</span>
-                <i class="far fa-heart pull-right" id="like-icon"></i>
-            </button>
-
-
-        </div>
-        <div class="col">
-            <h4><span class="badge bg-danger" id="likes">{{ article.get_likes }} Likes</span></h4>
-        </div>
-        -->
-
-        {{ article.id|json_script:"article_id" }}
-        {{ request.user.is_authenticated|json_script:"user_is_authenticated" }}
-
-    </div>
+    {{ article.id|json_script:"article_id" }}
+    {{ article.title|json_script:"article_title"}}
+    {{ request.user.is_authenticated|json_script:"user_is_authenticated" }}
+    <div id="likeshare" class="row"></div>
 
     <hr>
     {{ article.display_content|safe }}

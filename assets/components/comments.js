@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 const articleID = JSON.parse(document.querySelector("#article_id").textContent);
 const user_is_authenticated = JSON.parse(document.querySelector("#user_is_authenticated").textContent);
 
+
 const csrftoken = Cookies.get('csrftoken');
 
 function Comments() {
@@ -29,7 +30,7 @@ function Comments() {
         })
         .catch(error=>{
             console.log("Error: " + error);
-            window.alert("ERROR: " + error)
+            window.alert("ERROR: " + error);
         });
     }
 
@@ -68,18 +69,21 @@ function Comments() {
 
 const AddCommentWidget = (props) => {
     const [text, setText] = useState("");
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState({"text": [""]});
+    const [fetching, setFetching] = useState(false);
 
 
     const saveComment = function() {
-        if (text.length>20) {
-            // Handle client side errors
+        if (text.length>200) {
+            // Handle client side errors (TODO)
+            setErrors({"text": ["Your comment is too long. Shorten it please."]})
         }
 
         let comment = {
             text: text,
             article: articleID
         }
+        setFetching(true);
 
         fetch(`/api/comments/${articleID}`, {
             method: 'POST',
@@ -95,12 +99,13 @@ const AddCommentWidget = (props) => {
         .then(data=>{
             console.log('Success' + data)
             props.commentSaved();
+            setFetching(false);
         }
         )
         .catch(error=>{
             console.log('Error' + error);
             window.alert(error);
-            setErrors(error.content);
+            setErrors(error.text);
         })
 
     }
@@ -108,11 +113,10 @@ const AddCommentWidget = (props) => {
 
     return (
         <div className="container py-3">
-            <div className="mb-3 form-floating">
+            <div className="mb-3">
                 <label htmlFor="comment-text" className="form-label">Text</label>
-                <textarea id="comment-text" placeholder="Comment Text" className="form-control" value={text} rows="3" onChange={(event)=>setText(event.target.value)}/>
+                <textarea id="comment-text" placeholder="Comment Text" className="form-control" value={text} rows="5" onChange={(event)=>setText(event.target.value)}/>
                   {
-                 // Show any errors associated with the "text" field
 
                   errors.text.map((error, i) =><div className="invalid-feedback" key={i}>{error}</div>)
 
@@ -120,9 +124,9 @@ const AddCommentWidget = (props) => {
             </div>
             <div className="mb-3">
                 {user_is_authenticated ?
-                    <button className="btn btn-outline-primary" type="button" onClick={() => saveComment()} disabled={(!text)}>Comment</button>
-                :   <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="You must be authteticated to comment">
-                        <button className="btn btn-outline-primary" style="pointer-events: none;" type="button" onClick={() => saveComment()} disabled>Comment</button>
+                    <button className="btn btn-outline-primary" type="button" onClick={() => saveComment()} disabled={(!text)|fetching}>{fetching ? "Commenting": "Comment"}</button>
+                :   <span className="d-inline-block" tabindex="0" data-toggle="tooltip" title="You must be authenticated to comment">
+                        <button className="btn btn-outline-primary" id="save-comment" type="button" onClick={() => saveComment()} disabled>Sign in to comment</button>
                     </span>
                 }
             </div>
@@ -131,27 +135,38 @@ const AddCommentWidget = (props) => {
     );
 }
 const CommentList = (props) => {
-    if (props.comments.length===0) {
-        return <h5>No one has commented on this article yet! Be the first to comment</h5>
-    }  else {
-        return (
-            <>
-            {props.comments.map((comment)=>
-                <div className='list-group-item'>
-                    <div className="d-flex w-100 justify-content-between">
-                        <small className="text-muted">
-                            { comment.date }
+    if (props.comments) {
+        if (props.comments.length===0) {
+
+            return (
+            <div className="m-3">
+                <h5>No one has commented on this article yet! Be the first to comment!</h5>
+            </div>
+            );
+
+        }  else {
+            return (
+                <>
+                {props.comments.map((comment)=>
+                    <div className='list-group-item'>
+                        <div className="d-flex w-100 justify-content-between">
+                            <small className="text-muted">
+                                { comment.date }
+                            </small>
+                        </div>
+                        <p className="mb-1">{ comment.text }</p>
+                        <small className='text-muted'>
+                            by <strong>{ comment.user }</strong>
                         </small>
                     </div>
-                    <p className="mb-1">{ comment.text }</p>
-                    <small className='text-muted'>
-                        by <strong>{ comment.user }</strong>
-                    </small>
-                </div>
-            )}
-            </>
+                )}
+                </>
 
-        )
+            )
+        }
+
+    } else {
+        return <></>
     }
 }
 
