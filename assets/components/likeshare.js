@@ -107,7 +107,7 @@ function LikeButton(props) {
 
     useEffect(()=>{
         getLiked();
-    })
+    }, [])
 
 
     const IconClass = liked ? 'far' : 'fas';

@@ -24,6 +24,10 @@ class CustomUserAdmin(UserAdmin):
     )
 
 
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('text', 'article', 'user', 'date')
+
+
 admin.site.register(User, CustomUserAdmin)
-admin.site.register(Comment)
+admin.site.register(Comment, CommentAdmin)
 admin.site.register(Project)

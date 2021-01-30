@@ -21,6 +21,8 @@ from .serializers import CommentSerializer, ArticleSerializer, LikeSerializer
 
 from .models import Article, User, Project, Comment
 from .forms import CommentForm
+
+from datetime import datetime
 # from .forms import CommentForm
 # Create your views here.
 
@@ -62,7 +64,9 @@ class CommentList(generics.ListCreateAPIView):
             return Comment.objects.filter(article=article).order_by('-date')
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        serializer.save(user=self.request.user, date=datetime.now())
+
+
 
 
 
@@ -177,7 +181,7 @@ def like_article(request, pk):
     if request.method=='GET':
         """ Returns whether an article is liked by the user """
 
-        return Response({'liked': article.likes.filter(id=request.user.id.exists())}, status=status.HTTP_200_OK)
+        return Response({'liked': article.likes.filter(id=request.user.id).exists()}, status=status.HTTP_200_OK)
 
     elif request.method=='PUT':
         try:

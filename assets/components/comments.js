@@ -55,6 +55,7 @@ function Comments() {
         return (
             <>
             <AddCommentWidget commentSaved={commentSaved}/>
+            <hr />
             <CommentList comments={comments}/>
 
 
@@ -69,15 +70,16 @@ function Comments() {
 
 const AddCommentWidget = (props) => {
     const [text, setText] = useState("");
-    const [errors, setErrors] = useState({"text": [""]});
+    const [errors, setErrors] = useState({"text": ""});
+    const [isValid, setIsValid] = useState(true);
     const [fetching, setFetching] = useState(false);
 
 
+    if (text.length>200) {
+        setIsValid(false);
+    }
     const saveComment = function() {
-        if (text.length>200) {
-            // Handle client side errors (TODO)
-            setErrors({"text": ["Your comment is too long. Shorten it please."]})
-        }
+
 
         let comment = {
             text: text,
@@ -100,8 +102,8 @@ const AddCommentWidget = (props) => {
             console.log('Success' + data)
             props.commentSaved();
             setFetching(false);
-        }
-        )
+            setText("");
+        })
         .catch(error=>{
             console.log('Error' + error);
             window.alert(error);
@@ -111,20 +113,22 @@ const AddCommentWidget = (props) => {
     }
 
 
+    const formClass = isValid ? "is-valid" : "is-invalid";
     return (
         <div className="container py-3">
             <div className="mb-3">
                 <label htmlFor="comment-text" className="form-label">Text</label>
-                <textarea id="comment-text" placeholder="Comment Text" className="form-control" value={text} rows="5" onChange={(event)=>setText(event.target.value)}/>
-                  {
+                <textarea id="comment-text" placeholder="Comment Text" className={"form-control " + formClass} value={text} rows="5" onChange={(event)=>setText(event.target.value)} required/>
 
-                  errors.text.map((error, i) =><div className="invalid-feedback" key={i}>{error}</div>)
 
-                  }
+                 <div className="invalid-feedback">{`Your comment is longer than 200 characters. It is ${text.length} characters.`}</div>
+                 <div className="valid-feedback">{`${text.length} Characters`}</div>
+
+
             </div>
             <div className="mb-3">
                 {user_is_authenticated ?
-                    <button className="btn btn-outline-primary" type="button" onClick={() => saveComment()} disabled={(!text)|fetching}>{fetching ? "Commenting": "Comment"}</button>
+                    <button className="btn btn-outline-primary" type="button" onClick={() => saveComment()} disabled={(!text)|fetching|(text>200)}>{fetching ? "Commenting...": "Comment"}</button>
                 :   <span className="d-inline-block" tabindex="0" data-toggle="tooltip" title="You must be authenticated to comment">
                         <button className="btn btn-outline-primary" id="save-comment" type="button" onClick={() => saveComment()} disabled>Sign in to comment</button>
                     </span>
@@ -151,7 +155,7 @@ const CommentList = (props) => {
                     <div className='list-group-item'>
                         <div className="d-flex w-100 justify-content-between">
                             <small className="text-muted">
-                                { comment.date }
+                                Date: { comment.date }
                             </small>
                         </div>
                         <p className="mb-1">{ comment.text }</p>

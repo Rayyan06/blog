@@ -69,6 +69,10 @@ class Comment(models.Model):
     text = models.CharField(max_length=200)
     date = models.DateTimeField(auto_now=True)
 
+    @property
+    def get_formatted_date(self):
+        return self.date.strftime("%b %d, %Y at %-I:%-M %p")
+
     def __str__(self):
         return self.text
 
