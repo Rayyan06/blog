@@ -70,14 +70,10 @@ function Comments() {
 
 const AddCommentWidget = (props) => {
     const [text, setText] = useState("");
-    const [errors, setErrors] = useState({"text": ""});
-    const [isValid, setIsValid] = useState(true);
+    const [errors, setErrors] = useState({"text": [""]});
     const [fetching, setFetching] = useState(false);
 
 
-    if (text.length>200) {
-        setIsValid(false);
-    }
     const saveComment = function() {
 
 
@@ -102,26 +98,34 @@ const AddCommentWidget = (props) => {
             console.log('Success' + data)
             props.commentSaved();
             setFetching(false);
-            setText("");
+            if (data.text) {
+                setErrors(data);
+            } else {
+                setText("");
+            }
+           
         })
         .catch(error=>{
             console.log('Error' + error);
-            window.alert(error);
-            setErrors(error.text);
+            window.alert(error.text);
+            setErrors(error);
         })
 
     }
 
-
-    const formClass = isValid ? "is-valid" : "is-invalid";
+    const isValid = errors.text[0] ? "is-invalid" : "is-valid";
+    
     return (
         <div className="container py-3">
             <div className="mb-3">
                 <label htmlFor="comment-text" className="form-label">Text</label>
-                <textarea id="comment-text" placeholder="Comment Text" className={"form-control " + formClass} value={text} rows="5" onChange={(event)=>setText(event.target.value)} required/>
+                <textarea id="comment-text" placeholder="Comment Text" className={`form-control ${isValid}`} value={text} rows="5" onChange={(event)=>setText(event.target.value)} required/>
 
+                { (!isValid) ?
+                    <div className="invalid-feedback">{errors.text.map((error)=>error)}</div>
+                : ''
+                }
 
-                 <div className="invalid-feedback">{`Your comment is longer than 200 characters. It is ${text.length} characters.`}</div>
                  <div className="valid-feedback">{`${text.length} Characters`}</div>
 
 

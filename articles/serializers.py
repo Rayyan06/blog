@@ -3,7 +3,7 @@ from .models import Comment, Article, User
 
 class CommentSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
-    date = serializers.DateTimeField(format="%b %d, %Y at %-I:%M %p", required=False)
+    date = serializers.DateTimeField(format="%b %d %Y at %H:%M %p", required=False)
 
     class Meta:
         model = Comment
