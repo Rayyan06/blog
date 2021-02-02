@@ -98,12 +98,14 @@ const AddCommentWidget = (props) => {
             console.log('Success' + data)
             props.commentSaved();
             setFetching(false);
-            if (data.text) {
+            if (Array.isArray(data.text)) {
                 setErrors(data);
             } else {
                 setText("");
+                setErrors({"text": [""]});
+
             }
-           
+
         })
         .catch(error=>{
             console.log('Error' + error);
@@ -113,28 +115,30 @@ const AddCommentWidget = (props) => {
 
     }
 
-    const isValid = errors.text[0] ? "is-invalid" : "is-valid";
-    
-    return (
-        <div className="container py-3">
-            <div className="mb-3">
-                <label htmlFor="comment-text" className="form-label">Text</label>
-                <textarea id="comment-text" placeholder="Comment Text" className={`form-control ${isValid}`} value={text} rows="5" onChange={(event)=>setText(event.target.value)} required/>
+    let isValid = errors.text[0] ? "is-invalid" : "is-valid";
+    let commentButtonText = fetching ? <>Commenting <i class="fas fa-spinner"></i></> : "Comment";
 
-                { (!isValid) ?
-                    <div className="invalid-feedback">{errors.text.map((error)=>error)}</div>
+    return (
+        <div className="container py-3 add-comment-form">
+            <div className="mb-3 add-comment-input">
+
+                <label htmlFor="comment-text">Comment Text</label>
+                <textarea id="comment-text" placeholder="Comment Text" className='add-comment-area' value={text} onChange={(event)=>setText(event.target.value)} required/>
+
+                { isValid ?
+                    <div className="feedback-error">{errors.text[0]}</div>
                 : ''
                 }
 
-                 <div className="valid-feedback">{`${text.length} Characters`}</div>
+                 <div className="feedback">{`${text.length} Characters`}</div>
 
 
             </div>
             <div className="mb-3">
                 {user_is_authenticated ?
-                    <button className="btn btn-outline-primary" type="button" onClick={() => saveComment()} disabled={(!text)|fetching|(text>200)}>{fetching ? "Commenting...": "Comment"}</button>
+                    <button id="save-comment" type="button" onClick={() => saveComment()} disabled={(!text)|fetching|(text>200)}>{commentButtonText}</button>
                 :   <span className="d-inline-block" tabindex="0" data-toggle="tooltip" title="You must be authenticated to comment">
-                        <button className="btn btn-outline-primary" id="save-comment" type="button" onClick={() => saveComment()} disabled>Sign in to comment</button>
+                        <button id="save-comment" type="button" onClick={() => saveComment()} disabled>Sign in to comment</button>
                     </span>
                 }
             </div>
@@ -155,18 +159,8 @@ const CommentList = (props) => {
         }  else {
             return (
                 <>
-                {props.comments.map((comment)=>
-                    <div className='list-group-item'>
-                        <div className="d-flex w-100 justify-content-between">
-                            <small className="text-muted">
-                                Date: { comment.date }
-                            </small>
-                        </div>
-                        <p className="mb-1">{ comment.text }</p>
-                        <small className='text-muted'>
-                            by <strong>{ comment.user }</strong>
-                        </small>
-                    </div>
+                {props.comments.map((comment, index)=>
+                    <Comment comment={comment} index={index}/>
                 )}
                 </>
 
@@ -178,5 +172,48 @@ const CommentList = (props) => {
     }
 }
 
+
+
+const Comment = (props) => {
+
+    return (
+        <div className="comment" id={`comment-${props.index}`}>
+            <a href={`#comment-${props.index}`} className="comment-border-link"></a>
+
+            <div className="comment-heading">
+                <div className="comment-voting">
+
+                    <button type="button" className="icon-button">
+                        <i className="fas fa-chevron-up"></i>
+                    </button>
+                    <button type="button" className="icon-button">
+                        <i className="fas fa-chevron-down"></i>
+                    </button>
+
+                </div>
+                <div className="comment-info">
+                    <a href="#" className="comment-author">{props.comment.user}</a>
+                    <p className="m-0">
+                        37 points &bull; {props.comment.date}
+                    </p>
+
+                </div>
+            </div>
+            <div className="comment-body">
+                <p>
+                    {props.comment.text}
+                </p>
+                <button type="button" className="icon-button" id="reply-button">Reply <i class="fas fa-reply"></i></button>
+                <button type="button" className="icon-button" id="flag-button">Flag <i class="fas fa-flag"></i></button>
+            </div>
+
+            <div className="replies">
+
+            </div>
+
+        </div>
+    );
+
+}
 
 export default Comments;

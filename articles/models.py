@@ -66,6 +66,8 @@ class Article(models.Model):
 class Comment(models.Model):
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name="comments")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
+    upVotes = models.ManyToManyField(User, blank=True, related_name="up_votes")
+    downVotes = models.ManyToManyField(User, blank=True, related_name="down_votes")
     text = models.CharField(max_length=200)
     date = models.DateTimeField(auto_now=True)
 
