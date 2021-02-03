@@ -230,7 +230,7 @@ const Comment = (props) => {
                 </div>
             </div>
             <div className="comment-body">
-                <p>
+                <p className="comment-text">
                     {props.comment.text}
                 </p>
                 <button type="button" className="icon-button" id="reply-button">Reply <i class="fas fa-reply"></i></button>
