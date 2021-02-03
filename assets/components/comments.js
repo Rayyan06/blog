@@ -74,6 +74,35 @@ const AddCommentWidget = (props) => {
     const [fetching, setFetching] = useState(false);
 
 
+    const replyForm = () => {
+        return (
+            <div className="container py-3 add-comment-form">
+                <div className="mb-3 add-comment-input">
+
+                    <label htmlFor="comment-text">Reply Text</label>
+                    <textarea id="comment-text" placeholder="Comment Text" className='add-comment-area' value={text} onChange={(event)=>setText(event.target.value)} required/>
+
+                    { isValid ?
+                        <div className="feedback-error">{errors.text[0]}</div>
+                    : ''
+                    }
+
+                    <div className="feedback">{`${text.length} Characters`}</div>
+
+
+                </div>
+                <div className="mb-3">
+                    {user_is_authenticated ?
+                        <button id="save-comment" type="button" onClick={() => saveComment()} disabled={(!text)|fetching|(text>200)}>{replyButtonText}</button>
+                    :   <span className="d-inline-block" tabindex="0" data-toggle="tooltip" title="You must be authenticated to comment or reply">
+                            <button id="save-comment" type="button" onClick={() => saveComment()} disabled>Sign in to comment or reply</button>
+                        </span>
+                    }
+                </div>
+            </div>
+        )
+    }
+
     const saveComment = function() {
 
 
@@ -116,7 +145,8 @@ const AddCommentWidget = (props) => {
     }
 
     let isValid = errors.text[0] ? "is-invalid" : "is-valid";
-    let commentButtonText = fetching ? <>Commenting <i class="fas fa-spinner"></i></> : "Comment";
+    let replyButtonText = fetching ? <>Replying <i className="fas fa-spinner"></i></> : "Reply";
+    let commentButtonText = fetching ? <>Commenting <i className="fas fa-spinner"></i></> : "Comment";
 
     return (
         <div className="container py-3 add-comment-form">
