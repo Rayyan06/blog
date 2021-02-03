@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from "react-dom";
-import Comments from "./components/comments.js";
-import LikesElement from "./components/likeshare.js";
+import Comments from "./javascript/components/comments.js";
+import LikesElement from "./javascript/components/likeshare.js";
 
 ReactDOM.render(
   <Comments />,
