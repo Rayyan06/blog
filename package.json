@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "webpack --mode development",
     "livedev": "webpack --mode development --watch",
-    "compile:css": "node-sass -o static/css assets/styles"
+    "compile:css": "node-sass -o static/css assets/styles",
+    "compile:css:live": "node-sass -o static/css assets/styles --watch"
 
   },
   "repository": {
