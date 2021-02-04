@@ -8,7 +8,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="My Blog where I share technology based adventures and tutorials for people to benefit">
         {% endblock %}
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <link href="{% static 'css/root.css' %}" rel="stylesheet">
         <link href="{% static 'css/main.css' %}" rel="stylesheet">
         <script src="https://kit.fontawesome.com/fb41236a76.js" crossorigin="anonymous"></script>
 
@@ -24,35 +27,32 @@
                 <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
+                    <ul class="navbar-nav ms-auto mb-lg-0">
+                        <li class="nav-item my-auto">
                             <a href="{% url 'projects' %}" class="nav-link">Projects</a>
                         </li>
                         {% if request.user.is_authenticated %}
-                            <div class="collapse navbar-collapse" id="navbarNavProfileDropdown">
-                              <ul class="navbar-nav">
-                                <li class="nav-item dropdown">
-                                  <a class="nav-link dropdown" href="#" id="navbarProfileDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    {% if request.user.profile_pic %}
-                                        <img src="{{ request.user.profile_pic.url }}" id="profile-pic" width="35" height="35" alt="Profile Picture" />
-                                    {% else %}
-                                        << Profile pic >>
-                                    {% endif %}
-                                  </a>
-                                  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarProfileDropdownMenuLink">
-                                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                        <li class="nav-item dropdown">
 
+                            <a class="nav-link dropdown" href="#" id="navbarProfileDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {% if request.user.profile_pic %}
+                                    <img src="{{ request.user.profile_pic.url }}" id="profile-pic" width="35" height="35" alt="Profile Picture" />
+                                {% else %}
+                                     Profile pic
+                                {% endif %}
+                             </a>
 
-                                  </ul>
-                                </li>
-                              </ul>
-                            </div>
+                          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarProfileDropdownMenuLink">
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                            <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+
+                          </ul>
+                        </li>
+
                         {% else %}
-                            <li class="nav-item">
-                                <a href="{% url 'login' %}" class="nav-link">Login</a>
-                            </li>
-
+                        <li class="nav-item me-2">
+                            <a href="{% url 'login' %}" class="nav-link">Login</a>
+                        </li>
                         {% endif %}
 
                     </ul>

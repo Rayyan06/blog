@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "webpack --mode development",
-    "livedev": "webpack --mode development --watch"
+    "livedev": "webpack --mode development --watch",
+    "compile:css": "node-sass -o static/css assets/styles"
+
   },
   "repository": {
     "type": "git",
@@ -31,6 +33,7 @@
   },
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "bootstrap": "^4.6.0",
     "js-cookie": "^2.2.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
