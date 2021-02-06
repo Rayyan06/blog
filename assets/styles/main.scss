@@ -1,3 +1,7 @@
+$navbar-padding: 50px;
+$site-background-color: rgb(245, 245, 245);
+$box-color: rgb(255, 255, 255);
+
 html {
     height: 100vh;
 }
@@ -18,9 +22,9 @@ body {
 }
 
 .main {
-    background-color: rgb(245, 245, 245);
+    background-color: $site-background-color;
     flex: 1;
-    padding-top: 50px !important;
+    padding-top: $navbar-padding !important;
 }
 
 footer {
@@ -28,10 +32,11 @@ footer {
     box-shadow: 0px 2px 7px 1px rgba(0,0,0,0.47);
 
 }
+
 .box {
     border: 1px solid #dee2e6;
     border-radius: 10px;
-    background-color: rgb(255, 255, 255);
+    background-color: $box-color;
 }
 
 .project-card {

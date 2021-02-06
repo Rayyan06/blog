@@ -48,7 +48,19 @@ function Comments() {
 
 
     if (isLoading) {
-        return <h5>Loading...</h5>
+        return (
+            <div className="d-flex justify-content-center">
+              <div className="spinner-grow spinner text-secondary" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+              <div className="spinner-grow spinner text-secondary" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+              <div className="spinner-grow spinner text-secondary" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+            </div>
+        );
     }
 
     else {
@@ -72,6 +84,8 @@ const AddCommentWidget = (props) => {
     const [text, setText] = useState("");
     const [errors, setErrors] = useState({"text": [""]});
     const [fetching, setFetching] = useState(false);
+    const [textLabel, setTextLabel] = useState("Enter Comment Text");
+    const [isValid, setIsValid] = useState("");
 
 
     const replyForm = () => {
@@ -80,14 +94,14 @@ const AddCommentWidget = (props) => {
                 <div className="mb-3 add-comment-input">
 
                     <label htmlFor="comment-text">Reply Text</label>
-                    <textarea id="comment-text" placeholder="Comment Text" className='add-comment-area' value={text} onChange={(event)=>setText(event.target.value)} required/>
+                    <textarea id="comment-text" placeholder="Comment Text" className='form-control' value={text} onChange={(event)=>setText(event.target.value)} required/>
 
                     { isValid ?
-                        <div className="feedback-error">{errors.text[0]}</div>
+                        <div className="invalid-feedback">{`${text.length} Characters ${errors.text[0]}`}</div>
                     : ''
                     }
 
-                    <div className="feedback">{`${text.length} Characters`}</div>
+                    <div className="valid-feedback">{`${text.length} Characters`}</div>
 
 
                 </div>
@@ -144,31 +158,47 @@ const AddCommentWidget = (props) => {
 
     }
 
-    let isValid = errors.text[0] ? "is-invalid" : "is-valid";
+
+
+    useEffect(()=>{
+        if (text.length!==0) {
+            if (text.length<=200) {
+                setIsValid("is-valid");
+                setTextLabel(`${text.length} Characters`);
+            } else {
+                setIsValid("is-invalid");
+                if (errors.text[0]) {
+                    setTextLabel(`${errors.text[0]} (Currently ${text.length} characters)`)
+                } else {
+                    setTextLabel(`Field may not be longer than 200 characters (Currently ${text.length} characters)`)
+                }
+            }
+        } else {
+            setTextLabel(`Enter comment text here`);
+        }
+
+
+
+    }, [text])
+
+
     let replyButtonText = fetching ? <>Replying <i className="fas fa-spinner"></i></> : "Reply";
     let commentButtonText = fetching ? <>Commenting <i className="fas fa-spinner"></i></> : "Comment";
 
     return (
         <div className="container py-3 add-comment-form">
-            <div className="mb-3 add-comment-input">
+            <div className="mb-3 form-floating">
 
-                <label htmlFor="comment-text">Comment Text</label>
-                <textarea id="comment-text" placeholder="Comment Text" className='add-comment-area' value={text} onChange={(event)=>setText(event.target.value)} required/>
+                <textarea id="comment-text-input" placeholder="Comment Text" className={`form-control ${isValid}`} value={text} onChange={(event)=>setText(event.target.value)} required/>
 
-                { isValid ?
-                    <div className="feedback-error">{errors.text[0]}</div>
-                : ''
-                }
-
-                 <div className="feedback">{`${text.length} Characters`}</div>
-
+                <label htmlFor="comment-text-input">{textLabel}</label>
 
             </div>
             <div className="mb-3">
                 {user_is_authenticated ?
-                    <button id="save-comment" type="button" onClick={() => saveComment()} disabled={(!text)|fetching|(text>200)}>{commentButtonText}</button>
+                    <button id="save-comment" className="btn btn-primary" type="button" onClick={() => saveComment()} disabled={(!text)|fetching|(text>200)}>{commentButtonText}</button>
                 :   <span className="d-inline-block" tabindex="0" data-toggle="tooltip" title="You must be authenticated to comment">
-                        <button id="save-comment" type="button" onClick={() => saveComment()} disabled>Sign in to comment</button>
+                        <button id="save-comment" className="btn btn-primary" type="button" onClick={() => saveComment()} disabled>Sign in to comment</button>
                     </span>
                 }
             </div>
@@ -233,8 +263,8 @@ const Comment = (props) => {
                 <p className="comment-text">
                     {props.comment.text}
                 </p>
-                <button type="button" className="icon-button" id="reply-button">Reply <i class="fas fa-reply"></i></button>
-                <button type="button" className="icon-button" id="flag-button">Flag <i class="fas fa-flag"></i></button>
+                <button type="button" className="btn btn-sm btn-outline-primary me-2" id="reply-button">Reply <i class="fas fa-reply"></i></button>
+                <button type="button" className="btn btn-sm btn-outline-danger" id="flag-button">Flag <i class="fas fa-flag"></i></button>
             </div>
 
             <div className="replies">
