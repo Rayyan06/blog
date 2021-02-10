@@ -71,7 +71,7 @@ class Comment(models.Model):
     downVotes = models.ManyToManyField(User, blank=True, related_name="down_votes")
     text = models.CharField(max_length=200)
     date = models.DateTimeField(auto_now=True)
-    parent = models.ForeignKey("self", null=True, blank=True, related_name="replies", on_delete=models.SET_NULL)
+    parent = models.ForeignKey("self", null=True, related_name="replies", on_delete=models.SET_NULL)
 
     @property
     def get_formatted_date(self):

@@ -235,6 +235,19 @@ const CommentList = (props) => {
 
 
 const Comment = (props) => {
+    let replies = null;
+
+
+
+
+
+    const showReplies = () => {
+        if (props.replies) {
+            replies = props.replies.map((reply, index)=>
+                <Comment comment={reply} index={`reply-${index}`} />
+            )
+        }
+    }
 
     return (
         <div className="comment" id={`comment-${props.index}`}>
@@ -268,7 +281,7 @@ const Comment = (props) => {
             </div>
 
             <div className="replies">
-
+                { replies }
             </div>
 
         </div>

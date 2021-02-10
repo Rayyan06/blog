@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+    <div class="py-3" id="games-text">
+        <h1>Games</h1>
+        <small class="text-muted">Explore some of my Games!</small>
+    </div>
+    <hr>
+    {% for game in games %}
+        <div class="card text-center game-card">
+            <div class="card-body">
+                <h5 class="card-title">{{ game.name }}</h5>
+
+                <p class="card-text">{{ game.description }}</p>
+
+                <a href="{% url 'games:game' game.id %}" class="btn btn-secondary game"> Play {{ game.name }} </a>
+
+
+            </div>
+            <div class="card-footer text-muted">
+                Created: {{ game.created_date }}
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
