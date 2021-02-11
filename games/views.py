@@ -17,7 +17,7 @@ class GameView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['game_js'] = f"js/{self.get_object().name}.js"
+        context['game_js'] = f"js/snake/frontend/{self.get_object().name}.js"
         return context
 
 

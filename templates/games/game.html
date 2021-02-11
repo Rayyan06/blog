@@ -1,9 +1,20 @@
-{% extends "base.html" %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Snake Game</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="My Blog where I share technology based adventures and tutorials for people to benefit">
+    <link href="{% static 'css/root.css' %}" rel="stylesheet">
 
+
+</head>
 {% block js %}
     <script src="{% static game_js %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.2.0/lib/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 {% endblock js %}
 {% block content %}
 {% endblock %}
+</html>
